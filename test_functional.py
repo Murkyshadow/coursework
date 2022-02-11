@@ -34,9 +34,11 @@ class FunctionalTest(TestCase):
         dialog.data_input.setText("12sfd34")
         QTest.mouseClick(dialog.btn_insert, QtCore.Qt.MouseButton.LeftButton)
 
+        self.window.draw_el = MagicMock()
         dialog.key_input.setValue(5646)
         dialog.data_input.setText("12d d34 ок")
         QTest.mouseClick(dialog.btn_insert, QtCore.Qt.MouseButton.LeftButton)
+        self.window.draw_el.assert_called()
 
         dialog.key_input.setValue(123)
         dialog.data_input.setText("12")
