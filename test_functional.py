@@ -28,9 +28,21 @@ class FunctionalTest(TestCase):
 
         dialog.key_input.setValue(10)
         dialog.data_input.setText("1234")         # записываем данные в поля
-        self.facade.insert_value = MagicMock()
         QTest.mouseClick(dialog.btn_insert, QtCore.Qt.MouseButton.LeftButton)       # и пытаемся их добавить, нажав на кнопку
-        self.facade.insert_value.assert_called_with(10, "1234")                # проверяем: была ли функция вызвана с записанными данными
+
+        dialog.key_input.setValue(-32)
+        dialog.data_input.setText("12sfd34")
+        QTest.mouseClick(dialog.btn_insert, QtCore.Qt.MouseButton.LeftButton)
+
+        dialog.key_input.setValue(5646)
+        dialog.data_input.setText("12d d34 ок")
+        QTest.mouseClick(dialog.btn_insert, QtCore.Qt.MouseButton.LeftButton)
+
+        dialog.key_input.setValue(123)
+        dialog.data_input.setText("12")
+        self.facade.insert_value = MagicMock()
+        QTest.mouseClick(dialog.btn_insert, QtCore.Qt.MouseButton.LeftButton)
+        self.facade.insert_value.assert_called_with(123, "12")
 
     def test_delete(self):
         self.facade.insert_value(10, '1231421')
