@@ -52,9 +52,11 @@ class FunctionalTest(TestCase):
         self.facade.insert_value(7, '1231421')
         self.facade.insert_value(14, '1231421')
 
-        self.window.dialog.del_all = MagicMock()
         QTest.mouseClick(dialog.btn_remove_all, QtCore.Qt.MouseButton.LeftButton)
-        self.window.dialog.del_all.assert_called()
+
+        MessageBox = self.qapp.activeModalWidget()
+        if MessageBox is None:
+            self.fail()
 
     def test_save(self):
         btn_save = self.window.ui.btn_save
