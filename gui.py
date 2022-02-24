@@ -147,7 +147,6 @@ class MainWindow(QMainWindow):
         logging.log(logging.INFO, f' размер холста - {x * 2 + 100}, {y * path[0] + 100}')
         self.ui.canvas.setScene(self.scene)
 
-        print(len(path), path)
         if len(path) != 1:
             self.draw_el(x, y, path[1][0], path[1][1], None, 0)
 
