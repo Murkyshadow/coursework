@@ -82,7 +82,6 @@ class Test_Delete(TestBST):
         self.assertEqual(self.bst.left.right, None)
         self.assertEqual(self.bst.left.data, 'что-то 10')
 
-
     def test_delete_right_without_kids(self):
         self.many_insert([[11, 'что-то 11'], [15, 'что-то 15']])
         self.bst = self.bst.delete(15)
@@ -112,7 +111,7 @@ class Test_Delete(TestBST):
         self.assertEqual(self.bst.right.left.data, 'что-то 13')
 
 
-class Test_Insert(TestBST): # вставка не чисел, не целых
+class Test_Insert(TestBST):
     def test_insert_no_num_key(self):
         self.bst.insert('asdasd', 123)
         self.assertEqual(self.bst.key, None)
@@ -217,6 +216,7 @@ class Test_bypass(TestBST):
 
     def test_bypass_without_element(self):
         path = self.bst.bypass(0, [0])
+        print(path)
         self.assertEqual(path, [0])
 
     def test_bypass_with_one_element(self):

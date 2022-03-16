@@ -1,4 +1,3 @@
-from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QApplication, QDialog, QGraphicsScene, QMessageBox
 from PyQt5 import uic
 from facade import Facade
@@ -6,14 +5,13 @@ import sys
 import logging
 
 logging.basicConfig(level=logging.INFO)
-logging.disable(logging.INFO)
+# logging.disable(logging.INFO)
 
 
 class MainWindow(QMainWindow):
     """
     этот класс создает главное окно
     """
-
     def __init__(self, facade):  # что такое *args, **kwargs??
         """
         здесь загружается основное окно, прикрепляются действия к кнопкам (вызов функций) и отрисовывается дерево
@@ -43,7 +41,6 @@ class MainWindow(QMainWindow):
         """
         if self.facade.data_wait_for_save:
             logging.log(logging.INFO, ' есть несохраненные данные')
-            self.save = QMessageBox()
             self.save.setWindowTitle("Несохраненные данные")
             self.save.setText("Остались несохраненные данные!")
             self.save.setInformativeText("Хотите их сохранить?")
@@ -82,17 +79,16 @@ class MainWindow(QMainWindow):
 
     def open_dialog_delete(self):
         """
-        функция для открытия диалогового окна поиска данных и установки заголовка окна
+        функция для открытия диалогового окна удаления данных и установки заголовка окна
         :return: NONE
         """
-        self.dialog = DialogDelete(self.facade,
-                                   self)  # тут self. нужен для теста (чтобы можно было обратиться к dialog)
-        self.dialog.setWindowTitle("Удаление данных")
-        self.dialog.show()
+        dialog = DialogDelete(self.facade, self)  # тут self. нужен для теста (чтобы можно было обратиться к dialog)
+        dialog.setWindowTitle("Удаление данных")
+        dialog.show()
 
     def open_dialog_search(self):
         """
-        функция для открытия диалогового окна удаления данных и установки заголовка окна
+        функция для открытия диалогового окна поиска данных и установки заголовка окна
         :return: NONE
         """
         dialog = DialogSearch(self.facade, self)
@@ -112,13 +108,13 @@ class MainWindow(QMainWindow):
         """
         self.scene.addEllipse(x, y, 40, 40)
 
-        l = len(str(key))
+        long = len(str(key))
         text = self.scene.addText(f"{key}")
-        text.moveBy(x + 17 - l * 3, y + 10)
+        text.moveBy(x + 17 - long * 3, y + 10)
 
-        l = len(str(data))
+        long = len(str(data))
         text = self.scene.addText(f"{data}")
-        text.moveBy(x + 17 - l * 3, y + 40)
+        text.moveBy(x + 17 - long * 3, y + 40)
 
         if left == 1:
             self.scene.addLine(x + 30, y - 10, x + self.branch_len + 15, y - height + 60)
@@ -148,14 +144,14 @@ class MainWindow(QMainWindow):
         self.ui.canvas.setScene(self.scene)
 
         if len(path) != 1:
-            self.draw_el(x, y, path[1][0], path[1][1], None, 0)
+            self.draw_el(x, y, path[1][0], path[1][1])
 
         for n in range(2, len(path)):
             if path[n][1] is not None:
                 y += height
                 layer += 1
 
-                if (path[n - 1][0] > path[n][0]):  # значит этот элемент левее --> вычитаем
+                if path[n - 1][0] > path[n][0]:  # значит этот элемент левее --> вычитаем
                     x -= self.branch_len
                     self.draw_el(x, y, path[n][0], path[n][1], 1, height)
 
@@ -171,7 +167,7 @@ class MainWindow(QMainWindow):
                 layer -= 1
                 y -= height
                 self.branch_len *= 2
-                if (path[n - 1][0] < path[n][0]):
+                if path[n - 1][0] < path[n][0]:
                     x += self.branch_len
                 else:
                     x -= self.branch_len
@@ -269,7 +265,7 @@ class DialogDelete(QDialog):
             self.facade.delete_value(self.ui.input_key.value())
             self.parent().draw_tree()
         else:
-            self.ui.label_info.setText(f"Данного элемента не существует!")
+            self.ui.label_info.setText(f"Данного ключа не существует!")
 
 
 class DialogInput(QDialog):

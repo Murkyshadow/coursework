@@ -29,21 +29,20 @@ class DataBase:
         """
         sql = self.db.cursor()
         data = [value for value in sql.execute(f"SELECT * FROM Tree")]
-        if data == []:
+        if not data:
             logging.log(logging.INFO, ' база данных пуста')
         sql.close()
         return data
 
-    def save_all(self, path):
+    def del_all(self):
         """
-        Переписывает все старые данные на новые - удаляет данные и записывает текущие
-        :param path: путь обхода структуры данных
+        Вспомогательная функция для save_all.
+        Удаляет все данные в базе данных.
         :return: None
         """
-        self.del_all()
-        for val in path:
-            if val[1] is not None:
-                self.db_insert(val[0], val[1])
+        cur = self.db.cursor()
+        cur.execute("DELETE from Tree")
+        self.db.commit()
 
     def db_insert(self, key, data):
         """
@@ -57,19 +56,13 @@ class DataBase:
         self.db.commit()
         cur.close()
 
-    def del_all(self):
+    def save_all(self, path):
         """
-        Вспомогательная функция для save_all.
-        Удаляет все данные в базе данных.
+        Переписывает все старые данные на новые - удаляет данные и записывает текущие
+        :param path: путь обхода структуры данных
         :return: None
         """
-        cur = self.db.cursor()
-        delete = f"DELETE from Tree"
-        cur.execute(delete)
-        self.db.commit()
-
-    # def del_from_db(self, key):
-    #     cur = self.db.cursor()
-    #     delete = f"DELETE from Tree where key = '{key}'"
-    #     cur.execute(delete)
-    #     self.db.commit()
+        self.del_all()
+        for val in path:
+            if val[1] is not None:
+                self.db_insert(val[0], val[1])

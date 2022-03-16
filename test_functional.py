@@ -18,7 +18,7 @@ class FunctionalTest(TestCase):
 
     def test_add(self):
         btn_add = self.window.ui.btn_add
-        QTest.mouseClick(btn_add, QtCore.Qt.MouseButton.LeftButton)     # открывем диалоговое окно, нажав на кнопку
+        QTest.mouseClick(btn_add, QtCore.Qt.MouseButton.LeftButton)     # открываем диалоговое окно, нажав на кнопку
         for window in self.qapp.topLevelWidgets():      # возвращает список ссылок на все открытые окна (главное и диалоговые окна (при чем каждый раз в разном порядке))
             if isinstance(window, DialogInput):     # проверяем принадлежит ли открытое окно классу DialogInput
                 dialog = window
@@ -68,15 +68,17 @@ class FunctionalTest(TestCase):
 
         QTest.mouseClick(dialog.btn_remove_all, QtCore.Qt.MouseButton.LeftButton)
 
-        MessageBox = self.qapp.activeModalWidget()
-        if MessageBox is None:
+        message_box = self.qapp.activeModalWidget()
+        if message_box is None:
             self.fail()
 
     def test_save(self):
         btn_save = self.window.ui.btn_save
-        self.facade.save_data = MagicMock()
+        self.facade.insert_value(10, '1231421')
+
+        self.facade.DB.save_all = MagicMock()
         QTest.mouseClick(btn_save, QtCore.Qt.MouseButton.LeftButton)
-        self.facade.save_data.assert_called()
+        self.facade.DB.save_all.assert_called()
 
     def test_search(self):
         self.facade.insert_value(10, '1231421')
@@ -96,6 +98,7 @@ class FunctionalTest(TestCase):
 
     def tearDown(self) -> None:   # закрывает окно после остановки проекта
         self.qapp.deleteLater()
+
 
 if __name__ == '__main__':
     pass
