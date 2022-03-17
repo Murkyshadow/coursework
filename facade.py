@@ -1,4 +1,5 @@
 import logging
+import sys
 
 from DataBase import DataBase
 
@@ -15,7 +16,7 @@ class Facade:
         data_wait_for_save - False, если нет данных для сохранения, True, если есть данные для сохранения
         :param name: имя базы данных
         """
-        # sys.setrecursionlimit(2147483647)  # максимальное кол-во рекурсий
+        sys.setrecursionlimit(31)    # максимальное кол-во рекурсий 2147483647
         self.data_wait_for_save = False
         self.dictionary = BST()  # тут будет первый элемент
         self.DB = DataBase(name)

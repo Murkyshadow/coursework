@@ -261,9 +261,12 @@ class DialogDelete(QDialog):
         """
         link = self.facade.search_element_in_tree(self.ui.input_key.value())  # ссылка на элемент, который удаляем
         if link is not None:
-            self.ui.label_info.setText(f"Вы удалили: {self.ui.input_key.value()}, {link.data}")
-            self.facade.delete_value(self.ui.input_key.value())
-            self.parent().draw_tree()
+            try:
+                self.ui.label_info.setText(f"Вы удалили: {self.ui.input_key.value()}, {link.data}")
+                self.facade.delete_value(self.ui.input_key.value())
+                self.parent().draw_tree()
+            except RecursionError:
+                self.ui.label_info.setText(f"Дерево слишком высокое!\nПопробуйте ввести ключ для другого поддерева.")
         else:
             self.ui.label_info.setText(f"Данного ключа не существует!")
 
@@ -291,9 +294,14 @@ class DialogInput(QDialog):
         :return: None
         """
         if self.ui.data_input.text() != '' and self.facade.search_element_in_tree(self.ui.key_input.value()) is None:
-            self.facade.insert_value(self.ui.key_input.value(), self.ui.data_input.text())
-            self.ui.label_info.setText(f"Вы ввели: {self.ui.key_input.value()}, {self.ui.data_input.text()}")
-            self.parent().draw_tree()
+            try:
+                self.facade.insert_value(self.ui.key_input.value(), self.ui.data_input.text())
+                self.ui.label_info.setText(f"Вы ввели: {self.ui.key_input.value()}, {self.ui.data_input.text()}")
+                self.parent().draw_tree()
+                logging.log(logging.INFO, 'заполните поля')
+            except RecursionError:
+
+                self.ui.label_info.setText(f"Дерево слишком высокое!\nПопробуйте ввести ключ для другого поддерева.")
 
         elif self.ui.data_input.text() == '':
             self.ui.label_info.setText(f"Заполните поле!")
